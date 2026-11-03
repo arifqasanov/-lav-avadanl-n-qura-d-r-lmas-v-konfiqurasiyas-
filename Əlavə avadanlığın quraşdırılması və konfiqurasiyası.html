@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="az"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Əlavə avadanlığın quraşdırılması və konfiqurasiyası</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Unbounded:wght@500;800&display=swap">
+<style>
+:root{--bg:#05060c;--tx:#f4f5ff;--mu:#9ba0c4;--cd:rgba(255,255,255,.05);--bd:rgba(255,255,255,.12);--p:#8b5cff;--q:#22d3ee;--r:#ff4d8d;--y:#ffd84d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme=dark]){--bg:#f1f2fb;--tx:#14152b;--mu:#555a80;--cd:rgba(255,255,255,.7);--bd:rgba(20,20,60,.14)}}
+:root[data-theme=dark]{--bg:#05060c;--tx:#f4f5ff}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-family:'Space Grotesk',system-ui,sans-serif;cursor:default}
+.aur{position:fixed;inset:0;z-index:0;overflow:hidden}
+.aur i{position:absolute;width:55vmax;height:55vmax;border-radius:50%;filter:blur(110px);opacity:.5;mix-blend-mode:screen;transition:background 1.6s}
+.aur i:nth-child(1){background:var(--p);left:-15%;top:-25%;animation:d1 16s ease-in-out infinite alternate}
+.aur i:nth-child(2){background:var(--q);right:-20%;top:10%;opacity:.35;animation:d2 20s ease-in-out infinite alternate}
+.aur i:nth-child(3){background:var(--r);left:20%;bottom:-35%;opacity:.35;animation:d1 18s ease-in-out infinite alternate-reverse}
+@keyframes d1{to{translate:14vmax 8vmax;rotate:60deg}}@keyframes d2{to{translate:-12vmax 10vmax;scale:1.25}}
+.noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.07;background-image:radial-gradient(var(--tx) 1px,transparent 1px);background-size:22px 22px}
+.cur{position:fixed;z-index:20;width:34px;height:34px;border:1.5px solid var(--q);border-radius:50%;pointer-events:none;translate:-50% -50%;transition:width .25s,height .25s,background .25s;mix-blend-mode:difference}
+.cur.h{width:70px;height:70px;background:rgba(255,255,255,.2)}
+.stage{position:fixed;inset:0;z-index:2}
+.slide{position:absolute;inset:0;display:flex;padding:clamp(16px,3.5vw,56px);visibility:hidden;overflow:auto}
+.slide.on{visibility:visible}
+.w{width:min(1180px,100%);margin:auto;position:relative}
+.big{position:absolute;right:-1%;top:-14%;font:800 clamp(7rem,22vw,18rem)/1 Unbounded,sans-serif;color:transparent;-webkit-text-stroke:1px var(--bd);pointer-events:none;z-index:-1}
+.k{display:inline-flex;gap:.6em;align-items:center;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--q)}
+.k::before{content:"";width:34px;height:1px;background:var(--q)}
+h1,h2{font-family:Unbounded,sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1.08}
+h1{font-size:clamp(1.9rem,5.2vw,4.3rem);margin:.4em 0}
+h2{font-size:clamp(1.5rem,3.6vw,2.8rem);margin:.35em 0 .5em}
+.ch{display:inline-block;transform:translateY(110%) rotate(8deg);opacity:0}
+.wd{display:inline-block;overflow:hidden;vertical-align:bottom;padding-bottom:.12em}
+.on .ch{animation:ch .9s cubic-bezier(.16,1,.3,1) forwards;animation-delay:calc(var(--c)*28ms + 500ms)}
+@keyframes ch{to{transform:none;opacity:1}}
+.gr{background:linear-gradient(90deg,var(--p),var(--q),var(--r),var(--p));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 5s linear infinite}
+.sp .gr{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--q);animation:hu 6s linear infinite}
+.sp .gr .ch{color:inherit}
+@keyframes hu{0%,100%{color:#22d3ee}33%{color:#a78bfa}66%{color:#ff4d8d}}
+@keyframes sh{to{background-position:300% 0}}
+.lead{color:var(--mu);line-height:1.7;font-size:clamp(.9rem,1.4vw,1.08rem);max-width:58ch}
+.bento{display:grid;gap:14px;grid-template-columns:repeat(12,1fr)}
+.bento>*{grid-column:span 4}.s6{grid-column:span 6!important}.s8{grid-column:span 8!important}.s7{grid-column:span 7!important}.s5{grid-column:span 5!important}.s12{grid-column:span 12!important}
+@media(max-width:820px){.bento>*{grid-column:span 12!important}#t1{grid-template-columns:1fr!important}}
+.c{position:relative;background:var(--cd);border:1px solid var(--bd);border-radius:24px;padding:22px;overflow:hidden;backdrop-filter:blur(16px);transition:transform .3s,border-color .3s;transform-style:preserve-3d}
+.c::before{content:"";position:absolute;inset:0;background:radial-gradient(380px circle at var(--mx,50%) var(--my,0%),rgba(139,92,255,.28),transparent 60%);opacity:0;transition:opacity .3s}
+.c:hover::before{opacity:1}.c:hover{border-color:var(--p)}
+.c>*{position:relative}
+.c .e{font-size:2rem;display:inline-block;animation:bob 3.4s ease-in-out infinite}
+.c h3{font-size:1.02rem;margin:.55em 0 .4em;font-weight:700}
+.c p,.c li{color:var(--mu);font-size:.86rem;line-height:1.6}.c ul{padding-left:1.1em}
+@keyframes bob{50%{translate:0 -9px}}
+code{background:rgba(139,92,255,.25);padding:.1em .45em;border-radius:6px;font-size:.84em}
+.pill{display:inline-block;padding:.4em 1em;border:1px solid var(--bd);border-radius:99px;font-size:.78rem;background:var(--cd);margin:4px 4px 0 0}
+.tl{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:34px}
+.tl::before{content:"";position:absolute;left:0;top:22px;height:3px;width:100%;background:var(--bd)}
+.tl::after{content:"";position:absolute;left:0;top:22px;height:3px;width:0;background:linear-gradient(90deg,var(--p),var(--q),var(--r));box-shadow:0 0 18px var(--q)}
+.on .tl::after{animation:ln 2.2s .8s cubic-bezier(.77,0,.18,1) forwards}@keyframes ln{to{width:100%}}
+.tl .c{padding:62px 16px 16px}
+.tl .c b.n{position:absolute;top:0;left:16px;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:var(--bg);border:2px solid var(--q);z-index:2}
+@media(max-width:900px){.tl{grid-template-columns:1fr}.tl::before,.tl::after{display:none}}
+.orbit{position:relative;width:min(420px,80vw);aspect-ratio:1;margin:auto}
+.orbit .core{position:absolute;inset:34%;border-radius:28%;display:grid;place-items:center;font-size:3rem;background:linear-gradient(135deg,var(--p),var(--q));box-shadow:0 0 80px var(--p);animation:pul 3s ease-in-out infinite}
+.orbit .rg{position:absolute;inset:0;border:1px dashed var(--bd);border-radius:50%;animation:rot 26s linear infinite}
+.orbit .rg.b{inset:14%;animation-duration:18s;animation-direction:reverse}
+.orbit .rg span{position:absolute;width:52px;height:52px;margin:-26px;border-radius:16px;display:grid;place-items:center;font-size:1.5rem;background:var(--cd);border:1px solid var(--bd);backdrop-filter:blur(10px);animation:rot 26s linear infinite reverse}
+.orbit .rg.b span{animation-duration:18s;animation-direction:normal}
+@keyframes rot{to{rotate:360deg}}@keyframes pul{50%{scale:1.08}}
+.mon{display:flex;gap:14px;justify-content:center;perspective:1000px}
+.scr{width:46%;aspect-ratio:16/10;border-radius:14px;border:3px solid var(--bd);position:relative;overflow:hidden;background:linear-gradient(135deg,var(--p),var(--r));animation:bob 4s ease-in-out infinite}
+.scr:nth-child(1){transform:rotateY(16deg)}.scr:nth-child(2){transform:rotateY(-16deg);filter:hue-rotate(120deg);animation-delay:-2s}
+.scr::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.4) 50%,transparent 70%);translate:-100%;animation:sw 3s infinite}
+@keyframes sw{to{translate:100%}}
+.prn{position:relative;width:min(340px,80vw);margin:auto;height:240px}
+.prn .bd{position:absolute;bottom:0;left:0;right:0;height:120px;border-radius:22px;background:linear-gradient(135deg,#2a2e52,#14162b);border:1px solid var(--bd);display:flex;align-items:center;justify-content:space-around;font-size:.7rem;color:var(--mu);z-index:2}
+.prn .bd i{width:10px;height:10px;border-radius:50%;background:#3ddc84;box-shadow:0 0 14px #3ddc84;animation:bl 1.2s infinite}
+@keyframes bl{50%{opacity:.2}}
+.prn .pp{position:absolute;left:18%;right:18%;bottom:80px;height:130px;background:#fff;border-radius:6px 6px 0 0;z-index:1;animation:pp 4s cubic-bezier(.77,0,.18,1) infinite;background-image:repeating-linear-gradient(#fff 0 14px,#c9ccea 14px 16px)}
+@keyframes pp{0%,100%{translate:0 40px}50%{translate:0 -20px}}
+.stat{font:800 clamp(2rem,4.5vw,3.4rem)/1 Unbounded,sans-serif}
+.mq{overflow:hidden;white-space:nowrap;margin-top:34px;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.mq div{display:inline-block;animation:mq 22s linear infinite;font:800 clamp(1.4rem,3vw,2.4rem) Unbounded,sans-serif;color:transparent;-webkit-text-stroke:1px var(--mu)}
+@keyframes mq{to{translate:-50%}}
+[data-a]{opacity:0}
+.on [data-a]{opacity:1;animation:ri 1.1s cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(var(--i,0)*100ms + 600ms)}
+@keyframes ri{from{opacity:0;transform:translateY(60px) scale(.94) rotateX(18deg);filter:blur(12px)}to{opacity:1;transform:none;filter:none}}
+.fx{position:fixed;inset:0;z-index:6;pointer-events:none;opacity:0;background:linear-gradient(100deg,transparent 40%,rgba(139,92,255,.5) 48%,rgba(34,211,238,.6) 52%,transparent 60%)}
+.bar{position:fixed;top:0;left:0;height:3px;z-index:9;width:0;background:linear-gradient(90deg,var(--p),var(--q),var(--r));transition:width 1.1s cubic-bezier(.77,0,.18,1)}
+.nav{position:fixed;z-index:9;left:50%;translate:-50%;bottom:max(14px,env(safe-area-inset-bottom,0px));display:flex;gap:10px;align-items:center;padding:8px 12px;border-radius:99px;background:var(--cd);border:1px solid var(--bd);backdrop-filter:blur(18px)}
+.nav button{all:unset;cursor:pointer;width:34px;height:34px;display:grid;place-items:center;border-radius:50%}
+.nav button:hover{background:var(--bd)}
+.dots{display:flex;gap:7px}.dots i{height:8px;width:8px;border-radius:9px;background:var(--bd);cursor:pointer;transition:all .6s cubic-bezier(.77,0,.18,1)}.dots i.o{width:30px;background:linear-gradient(90deg,var(--p),var(--q))}
+.cnt{position:fixed;z-index:9;top:16px;left:22px;font:500 .75rem Unbounded,sans-serif;color:var(--mu)}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important}}
+</style></head><body>
+<div class="aur"><i></i><i></i><i></i></div><div class="noise"></div>
+<div class="bar" id="bar"></div><div class="cnt" id="cnt"></div>
+<main class="stage" id="st">
+
+<section class="slide on"><div class="w" style="display:grid;gap:30px;grid-template-columns:1.2fr 1fr;align-items:center" id="t1">
+<div><span class="k" data-a>Kompüter avadanlığı</span>
+<h1 class="sp">Əlavə avadanlığın <span class="gr">quraşdırılması və konfiqurasiyası</span></h1>
+<p class="lead" data-a style="--i:3">Printer, skaner, kamera, mikrofon, ikinci monitor və digər periferik qurğuların qoşulması, drayverlərin qurulması və tənzimlənməsi.</p>
+<div style="margin-top:22px;display:flex;gap:10px;flex-wrap:wrap">
+<div class="c" data-a style="--i:4;padding:12px 18px"><small style="color:var(--mu)">HAZIRLAYAN</small><h3 style="margin:2px 0 0">Arif Həsənov</h3></div>
+<div class="c" data-a style="--i:5;padding:12px 18px"><small style="color:var(--mu)">MÜƏLLİM</small><h3 style="margin:2px 0 0">Kamran Əbilov</h3></div>
+<div class="c" data-a style="--i:6;padding:12px 18px"><small style="color:var(--mu)">QRUP</small><h3 style="margin:2px 0 0">6526a1</h3></div></div></div>
+<div class="orbit" data-a style="--i:3"><div class="rg"><span style="left:50%;top:0">🖨️</span><span style="left:100%;top:50%">📷</span><span style="left:50%;top:100%">🎧</span><span style="left:0;top:50%">💾</span></div>
+<div class="rg b"><span style="left:50%;top:0">🖥️</span><span style="left:100%;top:50%">🎙️</span><span style="left:50%;top:100%">📠</span><span style="left:0;top:50%">📶</span></div><div class="core">💻</div></div>
+</div></section>
+
+<section class="slide"><div class="w"><div class="big">01</div>
+<span class="k" data-a>Giriş</span><h2 class="sp">Əlavə avadanlıq <span class="gr">nədir?</span></h2>
+<div class="bento">
+<div class="c s8" data-a style="--i:2"><span class="e">🔌</span><h3>Periferik qurğular</h3><p>Kompüterin əsas blokundan kənarda olan və onun imkanlarını genişləndirən qurğulardır: məlumat daxil edir, çıxarır, saxlayır və ya ötürür. Qoşulma interfeysləri: USB-A/C, HDMI, DisplayPort, Bluetooth, Wi-Fi, 3.5 mm audio.</p><div><span class="pill">USB</span><span class="pill">HDMI</span><span class="pill">DisplayPort</span><span class="pill">Bluetooth</span></div></div>
+<div class="c" data-a style="--i:3"><span class="e">⌨️</span><h3>Daxiletmə</h3><p>Klaviatura, siçan, skaner, veb-kamera, mikrofon.</p></div>
+<div class="c" data-a style="--i:4"><span class="e">🖨️</span><h3>Çıxış</h3><p>Monitor, printer, proyektor, qulaqlıq, dinamiklər.</p></div>
+<div class="c" data-a style="--i:5"><span class="e">💾</span><h3>Yaddaş</h3><p>Flash-disk, xarici HDD/SSD, kart oxuyucu.</p></div>
+<div class="c" data-a style="--i:6"><span class="e">📡</span><h3>Şəbəkə</h3><p>Wi-Fi adapter, Bluetooth modul, USB modem.</p></div>
+</div></div></section>
+
+<section class="slide"><div class="w"><div class="big">02</div>
+<span class="k" data-a>Hazırlıq</span><h2 class="sp">Qoşulmadan <span class="gr">əvvəl 5 addım</span></h2>
+<div class="tl">
+<div class="c" data-a style="--i:2"><b class="n">1</b><h3>Uyğunluq</h3><p>İnterfeys (USB, HDMI) və əməliyyat sistemi dəstəyini yoxlayın.</p></div>
+<div class="c" data-a style="--i:3"><b class="n">2</b><h3>Təhlükəsizlik</h3><p>Quru əl, torpaqlanmış rozetka, zədəsiz kabel. Daxili qurğuları söndürülmüş halda qoşun.</p></div>
+<div class="c" data-a style="--i:4"><b class="n">3</b><h3>Drayver</h3><p>Rəsmi istehsalçı saytından son versiyanı yükləyin.</p></div>
+<div class="c" data-a style="--i:5"><b class="n">4</b><h3>Yer seçimi</h3><p>Havalandırma, ergonomika və səliqəli kabel düzülüşü.</p></div>
+<div class="c" data-a style="--i:6"><b class="n">5</b><h3>Yeniləmə</h3><p>Windows Update və BIOS/UEFI yeniləmələrini yoxlayın.</p></div>
+</div></div></section>
+
+<section class="slide"><div class="w"><div class="big">03</div>
+<span class="k" data-a>Printer</span><h2 class="sp">Printerin <span class="gr">quraşdırılması</span></h2>
+<div class="bento" style="align-items:center">
+<div class="bento s7">
+<div class="c s6" data-a style="--i:2"><h3>1 · Fiziki qoşulma</h3><p>Qidalanma kabelini birləşdirin, kağız və kartric/toner yerləşdirin, USB ilə qoşun.</p></div>
+<div class="c s6" data-a style="--i:3"><h3>2 · Drayver</h3><p>Modelə uyğun drayveri qurun; Windows çox vaxt onu özü tapır.</p></div>
+<div class="c s12" data-a style="--i:4"><h3>3 · Əlavə etmə</h3><p><code>Settings → Bluetooth &amp; devices → Printers &amp; scanners → Add device</code></p></div>
+<div class="c s6" data-a style="--i:5"><h3>4 · Test çapı</h3><p>Printer xassələrində «Print Test Page».</p></div>
+<div class="c s6" data-a style="--i:6"><h3>5 · Parametrlər</h3><p>Defolt printer, A4, keyfiyyət, ikitərəfli çap, şəbəkə (IP) printeri.</p></div></div>
+<div class="prn s5" data-a="p" style="--i:3"><div class="pp"></div><div class="bd"><i></i><span>PRINTING…</span><i style="animation-delay:.4s"></i></div></div>
+</div></div></section>
+
+<section class="slide"><div class="w"><div class="big">04</div>
+<span class="k" data-a>Digər qurğular</span><h2 class="sp">Skaner, kamera, <span class="gr">mikrofon, qulaqlıq</span></h2>
+<div class="bento">
+<div class="c" data-a style="--i:2"><span class="e">📠</span><h3>Skaner</h3><ul><li>USB, drayver qurulur</li><li>300 dpi sənəd, 600+ foto</li><li>PDF, JPG, TIFF</li></ul></div>
+<div class="c" data-a style="--i:3"><span class="e">📷</span><h3>Veb-kamera</h3><ul><li>Plug &amp; Play</li><li>Privacy → Camera icazəsi</li><li>İşıq və fokus</li></ul></div>
+<div class="c" data-a style="--i:4"><span class="e">🎙️</span><h3>Mikrofon</h3><ul><li>Sound → Input seçimi</li><li>Səviyyə 70–80%</li><li>Test imkanı</li></ul></div>
+<div class="c" data-a style="--i:5"><span class="e">🎧</span><h3>Qulaqlıq</h3><ul><li>Cütləşmə rejimi</li><li>Add device → Bluetooth</li><li>Defolt çıxış</li></ul></div>
+<div class="c" data-a style="--i:6"><span class="e">💾</span><h3>Xarici disk</h3><ul><li>NTFS / exFAT / FAT32</li><li>Disk hərfi təyini</li><li>Safely Remove</li></ul></div>
+<div class="c" data-a style="--i:7"><span class="e">📶</span><h3>Wi-Fi adapter</h3><ul><li>Drayver + şəbəkə seçimi</li><li>5 GHz daha sürətli</li><li>WPA3/WPA2</li></ul></div>
+</div></div></section>
+
+<section class="slide"><div class="w"><div class="big">05</div>
+<div class="bento" style="align-items:center">
+<div class="s6"><span class="k" data-a>Monitor</span><h2 class="sp">İkinci monitorun <span class="gr">konfiqurasiyası</span></h2>
+<p class="lead" data-a style="--i:2"><code>Settings → System → Display</code> bölməsində ekranları tanıdın, düzün və parametrlərini seçin.</p>
+<div data-a style="--i:3;margin:16px 0"><span class="pill">Win + P</span><span class="pill">Duplicate</span><span class="pill">Extend</span><span class="pill">Second screen only</span></div>
+<div class="c" data-a style="--i:4"><ul><li><b>Identify</b> — ekranların nömrəsi, sürüşdürərək yerləşdirmə</li><li><b>Ayırdetmə</b> — tövsiyə olunan (məs. 1920×1080), 60/144 Hz</li><li><b>Main display</b> — əsas ekranın təyini</li></ul></div></div>
+<div class="mon s6" data-a="p"><div class="scr"></div><div class="scr"></div></div>
+</div></div></section>
+
+<section class="slide"><div class="w"><div class="big">06</div>
+<span class="k" data-a>Drayverlər</span><h2 class="sp">Problemlərin <span class="gr">aradan qaldırılması</span></h2>
+<div class="bento">
+<div class="c s6" data-a style="--i:2"><span class="e">🛠️</span><h3>Device Manager (Win + X)</h3><ul><li>Sarı ünlem — drayver problemi</li><li>Update driver — avtomatik axtarış</li><li>Roll back driver — əvvəlki versiya</li><li>Uninstall device — təmiz yenidən qurma</li></ul></div>
+<div class="c" data-a style="--i:3"><h3>Qurğu tanınmır</h3><p>Başqa USB portu/kabel yoxlayın, kompüteri yenidən başladın.</p></div>
+<div class="c" data-a style="--i:4"><h3>Çap olunmur</h3><p>«Offline» statusu və çap növbəsini yoxlayın, Print Spooler-i restart edin.</p></div>
+<div class="c" data-a style="--i:5"><h3>Səs / görüntü yoxdur</h3><p>Defolt qurğu, səviyyə və məxfilik icazələrini yoxlayın.</p></div>
+<div class="c" data-a style="--i:6"><h3>Yavaşlıq / konflikt</h3><p>USB hub əvəzinə birbaşa port, enerji qənaətini söndürün.</p></div>
+<div class="c s12" data-a style="--i:7;display:flex;gap:30px;flex-wrap:wrap;justify-content:space-around;text-align:center"><div><div class="stat gr">4</div><p>əsas şərt</p></div><div><div class="stat gr">5</div><p>hazırlıq addımı</p></div><div><div class="stat gr">8</div><p>qurğu növü</p></div></div>
+</div></div></section>
+
+<section class="slide"><div class="w" style="text-align:center"><span class="k" data-a>Nəticə</span>
+<h1 class="sp"><span class="gr">Təşəkkür edirəm!</span></h1>
+<p class="lead" data-a style="--i:3;margin:auto">Uyğunluğu yoxla → qoş → drayveri qur → konfiqurasiya et → test et.</p>
+<div class="mq" data-a style="--i:4"><div>PRINTER ✦ SKANER ✦ KAMERA ✦ MİKROFON ✦ MONİTOR ✦ QULAQLIQ ✦ DİSK ✦ WI-FI ✦ PRINTER ✦ SKANER ✦ KAMERA ✦ MİKROFON ✦ MONİTOR ✦ QULAQLIQ ✦ DİSK ✦ WI-FI ✦ </div></div>
+<p class="lead" data-a style="--i:5;margin:28px auto 0">Hazırladı: <b>Arif Həsənov</b> · Qrup 6526a1 · Müəllim: <b>Kamran Əbilov</b></p>
+</div></section>
+</main>
+<div class="fx" id="fx"></div>
+<div class="nav"><button id="pv">‹</button><div class="dots" id="ds"></div><button id="nx">›</button></div>
+<script>
+(function(){
+var S=[].slice.call(document.querySelectorAll('.slide')),n=S.length,cur=0,busy=0,$=function(i){return document.getElementById(i)},
+ds=$('ds'),fx=$('fx'),
+pal=[['#8b5cff','#22d3ee','#ff4d8d'],['#22d3ee','#8b5cff','#ffd84d'],['#ff4d8d','#8b5cff','#22d3ee'],['#3ddc84','#22d3ee','#8b5cff'],['#ffd84d','#ff4d8d','#8b5cff'],['#22d3ee','#ff4d8d','#8b5cff'],['#8b5cff','#3ddc84','#ff4d8d'],['#ff4d8d','#22d3ee','#ffd84d']];
+/* split headings into letters */
+document.querySelectorAll('.sp').forEach(function(h){var c=0;(function w(nd){[].slice.call(nd.childNodes).forEach(function(x){
+ if(x.nodeType===3){var f=document.createDocumentFragment();x.textContent.split(/(\s+)/).forEach(function(t){
+  if(/^\s+$/.test(t)||!t){f.appendChild(document.createTextNode(t));return}
+  var s=document.createElement('span');s.className='wd';[].forEach.call(t,function(l){var i=document.createElement('span');i.className='ch';i.style.setProperty('--c',c++);i.textContent=l;s.appendChild(i)});f.appendChild(s)});
+  x.replaceWith(f)}else if(x.nodeType===1)w(x)})})(h)});
+S.forEach(function(_,i){var d=document.createElement('i');d.onclick=function(){go(i)};ds.appendChild(d)});
+function ui(){[].forEach.call(ds.children,function(d,i){d.className=i===cur?'o':''});
+ $('bar').style.width=((cur+1)/n*100)+'%';$('cnt').textContent=('0'+(cur+1)).slice(-2)+' / 0'+n;
+ document.querySelectorAll('.aur i').forEach(function(o,k){o.style.background=pal[cur][k]})}
+function go(t){
+ if(busy||t===cur||t<0||t>=n)return;busy=1;
+ var a=S[cur],b=S[t],f=t>cur,D=1300,E='cubic-bezier(.77,0,.18,1)';
+ b.style.zIndex=3;a.style.zIndex=2;b.classList.add('on');
+ var c0=f?'polygon(0 0,0 0,-35% 100%,-35% 100%)':'polygon(100% 0,100% 0,135% 100%,135% 100%)',
+     c1=f?'polygon(0 0,135% 0,100% 100%,-35% 100%)':'polygon(100% 0,-35% 0,0 100%,135% 100%)';
+ b.animate([{clipPath:c0,transform:'scale(.82) rotate('+(f?2:-2)+'deg)',filter:'blur(16px) brightness(1.8)'},{clipPath:c1,transform:'none',filter:'none'}],{duration:D,easing:E,fill:'both'});
+ a.animate([{transform:'none',filter:'none',opacity:1},{transform:'scale(1.22) translateX('+(f?-6:6)+'%)',filter:'blur(14px)',opacity:0}],{duration:D,easing:E,fill:'both'});
+ fx.animate([{opacity:0,transform:'translateX('+(f?-100:100)+'%)'},{opacity:1,offset:.5},{opacity:0,transform:'translateX('+(f?100:-100)+'%)'}],{duration:D,easing:E});
+ cur=t;ui();
+ setTimeout(function(){a.classList.remove('on');a.getAnimations().forEach(function(z){z.cancel()});b.getAnimations().forEach(function(z){z.cancel()});b.style.zIndex=2;busy=0},D+40)}
+function nx(){go(cur+1)}function pv(){go(cur-1)}
+$('nx').onclick=nx;$('pv').onclick=pv;
+addEventListener('keydown',function(e){if(['ArrowRight','ArrowDown','PageDown',' '].indexOf(e.key)>-1){e.preventDefault();nx()}
+ if(['ArrowLeft','ArrowUp','PageUp'].indexOf(e.key)>-1){e.preventDefault();pv()}});
+var wl=0;addEventListener('wheel',function(e){var t=Date.now(),s=S[cur];if(t-wl<1500||Math.abs(e.deltaY)<30)return;
+ if(s.scrollHeight>s.clientHeight+4){var en=s.scrollTop+s.clientHeight>=s.scrollHeight-2,tp=s.scrollTop<=0;if((e.deltaY>0&&!en)||(e.deltaY<0&&!tp))return}
+ wl=t;e.deltaY>0?nx():pv()},{passive:true});
+var tx=0,ty=0;addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy))dx<0?nx():pv()},{passive:true});
+addEventListener('mousemove',function(e){
+ var c=e.target.closest&&e.target.closest('.c');
+ if(c){var r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+  c.style.setProperty('--mx',x*100+'%');c.style.setProperty('--my',y*100+'%');
+  c.style.transform='perspective(800px) rotateY('+(x-.5)*10+'deg) rotateX('+(.5-y)*10+'deg) translateY(-4px)'}});
+addEventListener('mouseout',function(e){var c=e.target.closest&&e.target.closest('.c');if(c)c.style.transform=''});
+ui()})();
+</script></body></html>
